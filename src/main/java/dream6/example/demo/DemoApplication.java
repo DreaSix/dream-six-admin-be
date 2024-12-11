@@ -1,4 +1,4 @@
-package com.test.demo;
+package dream6.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
