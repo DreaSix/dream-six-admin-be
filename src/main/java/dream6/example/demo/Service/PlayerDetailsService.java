@@ -13,5 +13,5 @@ public interface PlayerDetailsService {
 
     List<PlayerDetailsResponse> getMatchDetails(PlayerDetailsRequest playerDetailsRequest);
 
-    void saveTeamPlayerDetails(TeamPlayerDetailsRequest teamPlayerDetailsRequest);
+    void saveTeamPlayerDetails(TeamPlayerDetailsRequest teamPlayerDetailsRequest) throws Exception;
 }

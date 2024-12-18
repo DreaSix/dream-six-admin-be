@@ -31,13 +31,15 @@ public class UserDetailsServiceImpl {
         String password = generateDummyPassword();
 
         UserDetailsConfig userDetailsConfig = new UserDetailsConfig();
-        userDetailsConfig.setUserName(userName);
+        userDetailsConfig.setUsername(userName);
         userDetailsConfig.setPassword(password);
         userDetailsConfig.setGuid(generatedGuid);
         userDetailsConfig.setEntityId(request.getUserId());
         userDetailsConfig.setRole(request.getRole());
 
         userDetailsConfigRepository.save(userDetailsConfig);
+
+        usersRepository.delete(request);
 
         return userDetailsConfig;
     }
@@ -114,7 +116,7 @@ public class UserDetailsServiceImpl {
     }
 
     public UserDetailsConfig findUserByUserName(String userNameEntityIdStr) {
-        String userNameBranchTokens[] = userNameBranchCodeStr.split("~");
+        String userNameBranchTokens[] = userNameEntityIdStr.split("~");
         Optional<UserDetailsConfig> userData = userDetailsConfigRepository.findByUserNameAndEntityId(userNameBranchTokens[0], userNameBranchTokens[1]);
         if (userData.isPresent()) {
             return userData.get();

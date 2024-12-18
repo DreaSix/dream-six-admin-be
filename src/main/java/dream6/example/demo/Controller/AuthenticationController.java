@@ -17,9 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
@@ -63,17 +64,19 @@ public class AuthenticationController {
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest) {
 
-        String username = loginRequest.getUserName().toLowerCase();
+        String username = loginRequest.getUsername().toLowerCase();
 
-        Optional<UserDetailsConfig> userDetails1 = userDetailsConfigRepository.findByUserNameAndPassword(loginRequest.getUserName(), loginRequest.getPassword());
+        Optional<UserDetailsConfig> userDetails1 = userDetailsConfigRepository.findByUserNameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 
         if (userDetails1.isEmpty()) {
             // Return a response indicating that the username or password is incorrect
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
 
-        username = userDetails1.get().getUserName();
-        String userNameBranchCodeStr = String.format("%s~%s", username, userDetails1.get().getEntityId());
+        UserDetailsConfig userDetailsConfig = userDetails1.get();
+
+        username = userDetailsConfig.getUsername();
+        String userNameBranchCodeStr = String.format("%s~%s", username, userDetailsConfig.getEntityId());
 
         try {
             Authentication authentication = authenticationManager.authenticate(

@@ -39,4 +39,7 @@ public class MatchDetails {
 
     @Column(name = "MATCH_ACTION")
     private String matchAction;
+
+    @Column(name = "OPTION_COMPLETED")
+    private String optionCompleted;
 }

@@ -69,12 +69,14 @@ public class PlayerDetailsServiceImpl implements PlayerDetailsService{
     }
 
     @Override
-    public void saveTeamPlayerDetails(TeamPlayerDetailsRequest teamPlayerDetailsRequest) {
+    public void saveTeamPlayerDetails(TeamPlayerDetailsRequest teamPlayerDetailsRequest) throws Exception {
+        Optional<MatchDetails> optionalMatchDetails = matchDetailsRepository.findById(teamPlayerDetailsRequest.getMatchId());
+        if (optionalMatchDetails.isEmpty()){
+            throw new Exception("No match is found with this id");
+        }
         List<TeamPlayerDetails> teamPlayerDetailsList = new ArrayList<>();
         List<PlayerDetails> playerDetails = playerDetailsRepository.findAllByPlayerIds(teamPlayerDetailsRequest.getPlayerIds());
-        Optional<MatchDetails> matchDetails = matchDetailsRepository.findById(teamPlayerDetailsRequest.getMatchId());
-        MatchDetails matchDetails1;
-        matchDetails1 = matchDetails.orElse(null);
+        MatchDetails matchDetails1 = optionalMatchDetails.get();
         for (PlayerDetails playerDetails1 : playerDetails){
             TeamPlayerDetails teamPlayerDetails = new TeamPlayerDetails();
             teamPlayerDetails.setTeamName(teamPlayerDetailsRequest.getTeamName());
