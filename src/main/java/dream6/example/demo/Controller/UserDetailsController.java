@@ -1,6 +1,5 @@
 package dream6.example.demo.Controller;
 
-import dream6.example.demo.Entity.UserDetailsConfig;
 import dream6.example.demo.Entity.Users;
 import dream6.example.demo.Service.UserDetailsServiceImpl;
 import dream6.example.demo.dto.request.UserRequest;

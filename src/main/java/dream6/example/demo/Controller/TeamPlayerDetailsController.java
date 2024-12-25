@@ -1,16 +1,11 @@
 package dream6.example.demo.Controller;
 
 import dream6.example.demo.Service.TeamPlayerDetailsService;
-import dream6.example.demo.dto.request.PlayerDetailsRequest;
-import dream6.example.demo.dto.request.TeamPlayerDetailsRequest;
-import dream6.example.demo.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController

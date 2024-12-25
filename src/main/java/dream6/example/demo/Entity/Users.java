@@ -2,8 +2,13 @@ package dream6.example.demo.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
+@Entity
 @Table(name = "USER_DETAILS")
 public class Users {
     @Id
@@ -19,4 +24,5 @@ public class Users {
 
     @Column(name = "ROLE")
     private String role;
+
 }

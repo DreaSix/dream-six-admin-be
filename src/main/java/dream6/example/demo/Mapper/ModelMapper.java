@@ -2,9 +2,11 @@ package dream6.example.demo.Mapper;
 
 import dream6.example.demo.Entity.MatchDetails;
 import dream6.example.demo.dto.response.MatchDetailsResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.Base64;
 
+@Component
 public class ModelMapper {
 
     public MatchDetailsResponse convertEntityToMatchDetailsResponse(MatchDetails matchDetails){

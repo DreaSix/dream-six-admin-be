@@ -8,6 +8,8 @@ import dream6.example.demo.Repository.PlayerDetailsRepository;
 import dream6.example.demo.Repository.TeamPlayerDetailsRepository;
 import dream6.example.demo.dto.request.PlayerDetailsRequest;
 import dream6.example.demo.dto.request.TeamPlayerDetailsRequest;
+import dream6.example.demo.dto.response.MatchDetailsResponse;
+import dream6.example.demo.dto.response.MatchPlayerDetailsResponse;
 import dream6.example.demo.dto.response.PlayerDetailsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerDetailsServiceImpl implements PlayerDetailsService{
@@ -88,5 +91,38 @@ public class PlayerDetailsServiceImpl implements PlayerDetailsService{
 
         teamPlayerDetailsRepository.saveAll(teamPlayerDetailsList);
 
+    }
+
+    @Override
+    public List<MatchPlayerDetailsResponse> getMatchTeamPlayers(Integer id) {
+        // Find match details by ID
+        Optional<MatchDetails> matchDetailsOptional = matchDetailsRepository.findById(id);
+        if (matchDetailsOptional.isEmpty()) {
+            throw new RuntimeException("No match details present with this ID");
+        }
+
+        MatchDetails matchDetails = matchDetailsOptional.get();
+
+        // Fetch team-player details for the match
+        List<TeamPlayerDetails> teamPlayerDetailsList = teamPlayerDetailsRepository.findByMatchDetails(matchDetails);
+
+        // Convert team-player details to response
+        return teamPlayerDetailsList.stream().map(teamPlayer -> {
+            PlayerDetails player = teamPlayer.getPlayer();
+
+            MatchPlayerDetailsResponse response = new MatchPlayerDetailsResponse();
+            response.setPlayerId(player.getPlayerId());
+            response.setPlayerName(player.getPlayerName());
+            response.setCountryName(player.getCountryName());
+            response.setPlayerImage(Base64.getEncoder().encodeToString(player.getPlayerImage()));
+
+            MatchDetailsResponse matchResponse = new MatchDetailsResponse();
+            matchResponse.setMatchId(matchDetails.getMatchId()); // Assuming MatchDetails has an ID
+            matchResponse.setMatchName(matchDetails.getMatchName()); // Example field
+            matchResponse.setMatchTime(matchDetails.getMatchTime()); // Example field
+
+            response.setMatchDetails(matchResponse);
+            return response;
+        }).collect(Collectors.toList());
     }
 }

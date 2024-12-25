@@ -1,6 +1,5 @@
 package dream6.example.demo.utils;
 
-import dream6.example.demo.modal.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +16,13 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-    @Value("${edpedia.app.jwtSecret}")
+    @Value("${dreamSix.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${edpedia.app.jwtExpirationMs}")
+    @Value("${dreamSix.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    @Value("${edpedia.app.jwtRefreshExpirationMs}")
+    @Value("${dreamSix.app.jwtRefreshExpirationMs}")
     private int jwtRefreshExpirationMs;
 
     /**
@@ -97,13 +96,13 @@ public class JwtUtils {
                     .parseClaimsJws(authToken);
             return true;
         } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token: {}", e.getMessage());
+//            log.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.error("JWT token is expired: {}", e.getMessage());
+//            log.error("JWT token is expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error("JWT token is unsupported: {}", e.getMessage());
+//            log.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty: {}", e.getMessage());
+//            log.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
     }

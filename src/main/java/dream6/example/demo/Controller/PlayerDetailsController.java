@@ -1,10 +1,10 @@
 package dream6.example.demo.Controller;
 
 import dream6.example.demo.Service.PlayerDetailsService;
-import dream6.example.demo.dto.request.MatchDetailsRequest;
 import dream6.example.demo.dto.request.PlayerDetailsRequest;
 import dream6.example.demo.dto.request.TeamPlayerDetailsRequest;
 import dream6.example.demo.dto.response.ApiResponse;
+import dream6.example.demo.dto.response.MatchPlayerDetailsResponse;
 import dream6.example.demo.dto.response.PlayerDetailsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +52,23 @@ public class PlayerDetailsController {
     }
 
     @PostMapping(value = "/save-team")
-    public ResponseEntity<ApiResponse> saveTeamPlayerDetails(@RequestBody TeamPlayerDetailsRequest teamPlayerDetailsRequest) throws IOException {
+    public ResponseEntity<ApiResponse> saveTeamPlayerDetails(@RequestBody TeamPlayerDetailsRequest teamPlayerDetailsRequest) throws Exception {
 
         playerDetailsService.saveTeamPlayerDetails(teamPlayerDetailsRequest);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(200)
+                .responseTime(LocalDateTime.now())
+                .data("create Players for team successfully!")
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ApiResponse> getMatchPlayers(@PathVariable Integer id) throws Exception {
+
+        List<MatchPlayerDetailsResponse> playerDetailsResponseList =  playerDetailsService.getMatchTeamPlayers(id);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(200)

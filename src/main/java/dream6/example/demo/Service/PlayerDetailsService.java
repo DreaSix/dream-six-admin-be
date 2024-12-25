@@ -3,6 +3,7 @@ package dream6.example.demo.Service;
 
 import dream6.example.demo.dto.request.PlayerDetailsRequest;
 import dream6.example.demo.dto.request.TeamPlayerDetailsRequest;
+import dream6.example.demo.dto.response.MatchPlayerDetailsResponse;
 import dream6.example.demo.dto.response.PlayerDetailsResponse;
 
 import java.io.IOException;
@@ -14,4 +15,6 @@ public interface PlayerDetailsService {
     List<PlayerDetailsResponse> getMatchDetails(PlayerDetailsRequest playerDetailsRequest);
 
     void saveTeamPlayerDetails(TeamPlayerDetailsRequest teamPlayerDetailsRequest) throws Exception;
+
+    List<MatchPlayerDetailsResponse> getMatchTeamPlayers(Integer id);
 }

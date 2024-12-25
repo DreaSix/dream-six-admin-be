@@ -42,4 +42,5 @@ public class MatchDetails {
 
     @Column(name = "OPTION_COMPLETED")
     private String optionCompleted;
+
 }

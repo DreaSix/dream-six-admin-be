@@ -1,16 +1,18 @@
 package dream6.example.demo.Repository;
 
-import dream6.example.demo.Entity.UserDetailsConfig;
+import dream6.example.demo.Entity.UserDetailsConf;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface UserDetailsConfigRepository extends JpaRepository<UserDetailsConfig, Integer> {
+@Repository
+public interface UserDetailsConfigRepository extends JpaRepository<UserDetailsConf, Integer> {
     boolean existsByGuid(String guid);
 
-    boolean existsByUserName(String tempUserName);
+    boolean existsByUsername(String tempUserName);
 
-    Optional<UserDetailsConfig> findByUserNameAndPassword(String userName, String password);
+    Optional<UserDetailsConf> findByUsernameAndPassword(String userName, String password);
 
-    Optional<UserDetailsConfig> findByUserNameAndEntityId(String userNameBranchToken, String userNameBranchToken1);
+    Optional<UserDetailsConf> findByUsernameAndEntityId(String userNameBranchToken, Integer entityId);
 }

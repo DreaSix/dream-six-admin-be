@@ -3,15 +3,14 @@ package dream6.example.demo.dto.response;
 import lombok.Data;
 
 @Data
-public class PlayerDetailsResponse {
+public class MatchPlayerDetailsResponse {
 
     private Integer playerId;
-
     private String playerName;
-
     private String countryName;
-
-    private String playerImage;
+    private String playerImage; // Base64 encoded image
+    private String teamName;
+    private MatchDetailsResponse matchDetails;
 
     public Integer getPlayerId() {
         return playerId;
@@ -43,5 +42,21 @@ public class PlayerDetailsResponse {
 
     public void setPlayerImage(String playerImage) {
         this.playerImage = playerImage;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public MatchDetailsResponse getMatchDetails() {
+        return matchDetails;
+    }
+
+    public void setMatchDetails(MatchDetailsResponse matchDetails) {
+        this.matchDetails = matchDetails;
     }
 }

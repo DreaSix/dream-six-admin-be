@@ -4,15 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
+@Entity
 @Table(name= "USER_DETAILS_CONFIG")
-public class UserDetailsConfig extends BaseEntity{
+public class UserDetailsConf{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Integer id;
+    private Integer userId;
 
     @Column(name = "USER_NAME")
     private String username;

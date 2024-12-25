@@ -1,18 +1,20 @@
 package dream6.example.demo.Service;
 
-import dream6.example.demo.Entity.UserDetailsConfig;
+import dream6.example.demo.Entity.UserDetailsConf;
 import dream6.example.demo.Entity.Users;
 import dream6.example.demo.Repository.UserDetailsConfigRepository;
 import dream6.example.demo.Repository.UsersRepository;
 import dream6.example.demo.dto.request.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
+@Service
 public class UserDetailsServiceImpl {
 
     @Autowired
@@ -21,7 +23,7 @@ public class UserDetailsServiceImpl {
     @Autowired
     private UsersRepository usersRepository;
 
-    public UserDetailsConfig createUser(Users request) {
+    public UserDetailsConf createUser(Users request) {
 
         String generatedGuid = getAvailableGUID();
         String userName;
@@ -30,7 +32,7 @@ public class UserDetailsServiceImpl {
 
         String password = generateDummyPassword();
 
-        UserDetailsConfig userDetailsConfig = new UserDetailsConfig();
+        UserDetailsConf userDetailsConfig = new UserDetailsConf();
         userDetailsConfig.setUsername(userName);
         userDetailsConfig.setPassword(password);
         userDetailsConfig.setGuid(generatedGuid);
@@ -71,7 +73,7 @@ public class UserDetailsServiceImpl {
 
         int count = 1;
         String tempUserName = userName;
-        while (userDetailsConfigRepository.existsByUserName(tempUserName)) {
+        while (userDetailsConfigRepository.existsByUsername(tempUserName)) {
             tempUserName = userName + count;
             count++;
         }
@@ -115,9 +117,9 @@ public class UserDetailsServiceImpl {
         usersRepository.save(users);
     }
 
-    public UserDetailsConfig findUserByUserName(String userNameEntityIdStr) {
+    public UserDetailsConf findUserByUserName(String userNameEntityIdStr) {
         String userNameBranchTokens[] = userNameEntityIdStr.split("~");
-        Optional<UserDetailsConfig> userData = userDetailsConfigRepository.findByUserNameAndEntityId(userNameBranchTokens[0], userNameBranchTokens[1]);
+        Optional<UserDetailsConf> userData = userDetailsConfigRepository.findByUsernameAndEntityId(userNameBranchTokens[0], Integer.valueOf(userNameBranchTokens[1]));
         if (userData.isPresent()) {
             return userData.get();
         } else {
