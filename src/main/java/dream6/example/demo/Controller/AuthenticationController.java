@@ -45,15 +45,6 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @PostMapping(value = "/createUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDetailsConf> createUser(@RequestBody Integer userId) {
-
-        Users users = usersRepository.findByUserId(userId);
-
-        UserDetailsConf userDetails = userDetailsService.createUser(users);
-
-        return ResponseEntity.ok().body(userDetails);
-    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest) {

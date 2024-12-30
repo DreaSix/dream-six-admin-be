@@ -6,16 +6,23 @@ import dream6.example.demo.Repository.UserDetailsConfigRepository;
 import dream6.example.demo.Repository.UsersRepository;
 import dream6.example.demo.dto.request.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
-public class UserDetailsServiceImpl {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserDetailsConfigRepository userDetailsConfigRepository;
@@ -130,5 +137,24 @@ public class UserDetailsServiceImpl {
     public List<Users> getUsers() {
 
         return usersRepository.findAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+//        String userNameBranchTokens[] = username.split("~");
+//        Optional<UserDetailsConf> userDetails = userDetailsConfigRepository.findByUserNameAndBranchCode(userNameBranchTokens[0], userNameBranchTokens[1]);
+//
+//        if (userDetails.isPresent()) {
+//            UserDetailsConf userInfo = userDetails.get();
+//
+////            List<GrantedAuthority> authorityList = userInfo.getRole().stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
+//
+//            return new User(String.format("%s~%s", userInfo.getUsername(), StringUtils.hasText(String.valueOf(userInfo.getUserId())) ? userInfo.getUserId() : "NA"), userInfo.getPassword(), userInfo.getRole());
+//        } else {
+//            throw new UsernameNotFoundException("User doesn't exist");
+//        }
+        return null;
+
     }
 }

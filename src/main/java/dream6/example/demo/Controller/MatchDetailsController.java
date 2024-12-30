@@ -26,7 +26,7 @@ public class MatchDetailsController {
     @PostMapping(value = "/save")
     public ResponseEntity<ApiResponse> saveMatchDetails(@ModelAttribute MatchDetailsRequest matchDetailsRequest) throws IOException {
 
-        MatchDetails matchDetails =  matchDetailsService.saveMatchDetails(matchDetailsRequest);
+        MatchDetails matchDetails = matchDetailsService.saveMatchDetails(matchDetailsRequest);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(200)
@@ -50,6 +50,5 @@ public class MatchDetailsController {
                 .build();
 
         return ResponseEntity.ok(apiResponse);
-
     }
 }

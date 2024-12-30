@@ -15,4 +15,6 @@ public interface UserDetailsConfigRepository extends JpaRepository<UserDetailsCo
     Optional<UserDetailsConf> findByUsernameAndPassword(String userName, String password);
 
     Optional<UserDetailsConf> findByUsernameAndEntityId(String userNameBranchToken, Integer entityId);
+
+//    Optional<UserDetailsConf> findByUserNameAndBranchCode(String userNameBranchToken, String userNameBranchToken1);
 }
