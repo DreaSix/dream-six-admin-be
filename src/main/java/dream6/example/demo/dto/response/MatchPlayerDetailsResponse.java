@@ -10,7 +10,7 @@ public class MatchPlayerDetailsResponse {
     private String countryName;
     private String playerImage; // Base64 encoded image
     private String teamName;
-    private MatchDetailsResponse matchDetails;
+    private Integer matchId;
 
     public Integer getPlayerId() {
         return playerId;
@@ -44,19 +44,5 @@ public class MatchPlayerDetailsResponse {
         this.playerImage = playerImage;
     }
 
-    public String getTeamName() {
-        return teamName;
-    }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
-    public MatchDetailsResponse getMatchDetails() {
-        return matchDetails;
-    }
-
-    public void setMatchDetails(MatchDetailsResponse matchDetails) {
-        this.matchDetails = matchDetails;
-    }
 }

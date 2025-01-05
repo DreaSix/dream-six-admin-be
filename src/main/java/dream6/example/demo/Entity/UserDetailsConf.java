@@ -20,14 +20,10 @@ public class UserDetailsConf{
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "CONTACT_NO")
+    private String contactNo;
+
     @Column(name = "ROLE")
     private String role;
-
-    @Column(name = "GUID", nullable = false, unique = true, length = 7)
-    private String guid;
-
-    @Column(name = "ENTITY_ID")
-    private Integer entityId;
-
 
 }

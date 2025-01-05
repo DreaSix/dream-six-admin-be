@@ -11,4 +11,6 @@ public interface MatchDetailsService {
     MatchDetails saveMatchDetails(MatchDetailsRequest matchDetailsRequest) throws IOException;
 
     List<MatchDetailsResponse> getMatchDetails();
+
+    MatchDetailsResponse getMatchDetailsById(Integer matchId) throws Exception;
 }

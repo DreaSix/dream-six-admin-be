@@ -24,18 +24,12 @@ public class JwtUtils {
     @Value("${dreamSix.app.jwtRefreshExpirationMs}")
     private int jwtRefreshExpirationMs;
 
-    /**
-     * Generate a JWT token.
-     * @param authentication the authentication object containing user details
-     * @return the generated JWT token
-     */
-    public String generateJwtToken(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+    public String generateJwtToken(String username) {
         Date createdDate = new Date();
         Date expirationDate = new Date(createdDate.getTime() + jwtExpirationMs * 1000);
 
         return Jwts.builder()
-                .setSubject(user.getUsername())  // set the username as subject
+                .setSubject(username)  // set the username as subject
                 .setIssuedAt(createdDate)        // set the issue date
                 .setExpiration(expirationDate)   // set expiration date
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)  // sign the JWT token

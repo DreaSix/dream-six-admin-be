@@ -8,6 +8,7 @@ import dream6.example.demo.dto.response.MatchDetailsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -42,6 +43,20 @@ public class MatchDetailsController {
     public ResponseEntity<ApiResponse> getMatchDetails() throws IOException {
 
         List<MatchDetailsResponse> matchDetails =  matchDetailsService.getMatchDetails();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(200)
+                .responseTime(LocalDateTime.now())
+                .data(matchDetails)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping(value = "/{matchId}")
+    public ResponseEntity<ApiResponse> getMatchDetailsById(@PathVariable Integer matchId) throws Exception {
+
+        MatchDetailsResponse matchDetails =  matchDetailsService.getMatchDetailsById(matchId);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(200)

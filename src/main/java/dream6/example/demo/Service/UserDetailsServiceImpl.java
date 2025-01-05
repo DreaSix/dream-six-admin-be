@@ -15,10 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,18 +29,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetailsConf createUser(Users request) {
 
-        String generatedGuid = getAvailableGUID();
         String userName;
 
-        userName = generateUniqueUserName(request.getName(), request.getContactNo());
 
         String password = generateDummyPassword();
 
         UserDetailsConf userDetailsConfig = new UserDetailsConf();
-        userDetailsConfig.setUsername(userName);
+        userDetailsConfig.setContactNo(request.getContactNo());
+        userDetailsConfig.setUsername(request.getContactNo());
         userDetailsConfig.setPassword(password);
-        userDetailsConfig.setGuid(generatedGuid);
-        userDetailsConfig.setEntityId(request.getUserId());
         userDetailsConfig.setRole(request.getRole());
 
         userDetailsConfigRepository.save(userDetailsConfig);
@@ -89,17 +83,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private static final Random random = new Random();
 
-    public String getAvailableGUID() {
-        String guid;
-        do {
-            guid = generateGuid();
-        } while (userDetailsConfigRepository.existsByGuid(guid));
-
-        return guid;
-    }
-
     public static String generateGuid() {
-        return "EP" + getRandomAlphabet() + String.format("%05d", random.nextInt(100000));
+        return "DR" + getRandomAlphabet() + String.format("%05d", random.nextInt(100));
     }
 
     public static char getRandomAlphabet() {
@@ -124,15 +109,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         usersRepository.save(users);
     }
 
-    public UserDetailsConf findUserByUserName(String userNameEntityIdStr) {
-        String userNameBranchTokens[] = userNameEntityIdStr.split("~");
-        Optional<UserDetailsConf> userData = userDetailsConfigRepository.findByUsernameAndEntityId(userNameBranchTokens[0], Integer.valueOf(userNameBranchTokens[1]));
-        if (userData.isPresent()) {
-            return userData.get();
-        } else {
-            throw new UsernameNotFoundException("User doesn't exist");
-        }
-    }
 
     public List<Users> getUsers() {
 
@@ -142,19 +118,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-//        String userNameBranchTokens[] = username.split("~");
-//        Optional<UserDetailsConf> userDetails = userDetailsConfigRepository.findByUserNameAndBranchCode(userNameBranchTokens[0], userNameBranchTokens[1]);
-//
-//        if (userDetails.isPresent()) {
-//            UserDetailsConf userInfo = userDetails.get();
-//
-////            List<GrantedAuthority> authorityList = userInfo.getRole().stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
-//
-//            return new User(String.format("%s~%s", userInfo.getUsername(), StringUtils.hasText(String.valueOf(userInfo.getUserId())) ? userInfo.getUserId() : "NA"), userInfo.getPassword(), userInfo.getRole());
-//        } else {
-//            throw new UsernameNotFoundException("User doesn't exist");
-//        }
-        return null;
+        Optional<UserDetailsConf> userDetails = userDetailsConfigRepository.findByUsername(username);
 
+        if (userDetails.isPresent()) {
+            UserDetailsConf userInfo = userDetails.get();
+
+            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("User"));
+            return new User(userInfo.getUsername(), userInfo.getPassword(), authorities);
+
+        } else {
+            throw new UsernameNotFoundException("User doesn't exist");
+        }
+
+    }
+
+    public List<UserDetailsConf> getUserDetailsConfig() {
+        return  userDetailsConfigRepository.findAll();
     }
 }

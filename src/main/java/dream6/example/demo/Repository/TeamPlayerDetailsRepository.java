@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface TeamPlayerDetailsRepository extends JpaRepository<TeamPlayerDetails, Integer> {
     List<TeamPlayerDetails> findByMatchDetails(MatchDetails matchDetails);
+
+    List<TeamPlayerDetails> findByMatchDetailsAndTeamName(MatchDetails matchDetails, String teamName);
 }

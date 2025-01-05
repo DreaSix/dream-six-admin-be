@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MatchDetailsServiceImpl implements MatchDetailsService{
@@ -65,5 +66,17 @@ public class MatchDetailsServiceImpl implements MatchDetailsService{
             }
         }
         return matchDetailsResponses;
+    }
+
+    @Override
+    public MatchDetailsResponse getMatchDetailsById(Integer matchId) throws Exception {
+        Optional<MatchDetails> optionalMatchDetails = matchDetailsRepository.findById(matchId);
+
+        if (optionalMatchDetails.isEmpty()){
+            throw new Exception("no match details found with this id");
+        }
+        MatchDetails matchDetails = optionalMatchDetails.get();
+
+        return modelMapper.convertEntityToMatchDetailsResponse(matchDetails);
     }
 }

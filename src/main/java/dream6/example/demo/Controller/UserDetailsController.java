@@ -39,14 +39,29 @@ public class UserDetailsController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
-    @PostMapping(value = "/{userId}/createUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDetailsConf> createUser(@PathVariable Integer userId) {
+    @PostMapping(value = "/createUser")
+    public ResponseEntity<UserDetailsConf> createUserDetailsConfig(@RequestParam Integer userId) {
 
         Users users = usersRepository.findByUserId(userId);
 
         UserDetailsConf userDetails = userDetailsService.createUser(users);
 
         return ResponseEntity.ok().body(userDetails);
+    }
+
+    @GetMapping(value = "/get-users", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> getUserDetailsConfig() throws Exception {
+
+        List<UserDetailsConf> usersList = userDetailsService.getUserDetailsConfig();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(200)
+                .responseTime(LocalDateTime.now())
+                .data(usersList)
+                .build();
+
+
+        return ResponseEntity.ok().body(apiResponse);
     }
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)

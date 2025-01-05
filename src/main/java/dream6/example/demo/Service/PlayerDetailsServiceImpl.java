@@ -77,6 +77,8 @@ public class PlayerDetailsServiceImpl implements PlayerDetailsService{
         if (optionalMatchDetails.isEmpty()){
             throw new Exception("No match is found with this id");
         }
+        List<TeamPlayerDetails> teamPlayers = teamPlayerDetailsRepository.findByMatchDetailsAndTeamName(optionalMatchDetails.get(), teamPlayerDetailsRequest.getTeamName());
+        teamPlayerDetailsRepository.deleteAll(teamPlayers);
         List<TeamPlayerDetails> teamPlayerDetailsList = new ArrayList<>();
         List<PlayerDetails> playerDetails = playerDetailsRepository.findAllByPlayerIds(teamPlayerDetailsRequest.getPlayerIds());
         MatchDetails matchDetails1 = optionalMatchDetails.get();
@@ -114,14 +116,9 @@ public class PlayerDetailsServiceImpl implements PlayerDetailsService{
             response.setPlayerId(player.getPlayerId());
             response.setPlayerName(player.getPlayerName());
             response.setCountryName(player.getCountryName());
+            response.setTeamName(teamPlayer.getTeamName());
             response.setPlayerImage(Base64.getEncoder().encodeToString(player.getPlayerImage()));
-
-            MatchDetailsResponse matchResponse = new MatchDetailsResponse();
-            matchResponse.setMatchId(matchDetails.getMatchId()); // Assuming MatchDetails has an ID
-            matchResponse.setMatchName(matchDetails.getMatchName()); // Example field
-            matchResponse.setMatchTime(matchDetails.getMatchTime()); // Example field
-
-            response.setMatchDetails(matchResponse);
+            response.setMatchId(id);
             return response;
         }).collect(Collectors.toList());
     }

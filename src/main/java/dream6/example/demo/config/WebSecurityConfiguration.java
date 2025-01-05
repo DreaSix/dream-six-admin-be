@@ -56,21 +56,23 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/{userId}/createUser").permitAll()
+                        .requestMatchers("/api/user/createUser").permitAll() // Ensure this comes first
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(
-                                "/api/match-details/**",
+                                "/api/match-details/save",
                                 "/api/player-details/**",
                                 "/api/user/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated() // Apply authentication to other endpoints
                 )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication (optional if JWT used)
+                .httpBasic(Customizer.withDefaults()) // Optional: HTTP Basic authentication
+                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
 
     @Bean

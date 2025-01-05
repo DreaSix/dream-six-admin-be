@@ -22,7 +22,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,47 +48,57 @@ public class AuthenticationController {
     private UserDetailsServiceImpl userDetailsService;
 
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login")
     public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest) {
-
-        String username = loginRequest.getUsername().toLowerCase();
-
-        Optional<UserDetailsConf> userDetails1 = userDetailsConfigRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
-
-        if (userDetails1.isEmpty()) {
-            // Return a response indicating that the username or password is incorrect
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-        }
-
-        UserDetailsConf userDetailsConfig = userDetails1.get();
-
-        username = userDetailsConfig.getUsername();
-        String userNameBranchCodeStr = String.format("%s~%s", username, userDetailsConfig.getEntityId());
+        String username = loginRequest.getUsername();
 
         try {
+            // Authenticate user with the provided credentials
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userNameBranchCodeStr, loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(
+                            username,
+                            loginRequest.getPassword()
+                    )
+            );
 
+            if (!authentication.isAuthenticated()){
+                throw new Exception("Invalid username or password");
+            }
+
+            // If authentication is successful, set the security context
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwtToken(authentication);
-            String refreshToken = jwtUtils.generateRefreshJwtToken(authentication);
 
+            // Generate JWT tokens
+            String jwt = jwtUtils.generateJwtToken(loginRequest.getUsername());
+//            String refreshToken = jwtUtils.generateRefreshJwtToken(authentication);
+
+            // Extract user details
             User user = (User) authentication.getPrincipal();
-            UserDetailsConf userInfo = userDetailsService.findUserByUserName(userNameBranchCodeStr);
-
-            UserDetailsImpl userDetails = new UserDetailsImpl(user.getUsername(), user.getPassword(), user.getAuthorities());
-            List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+            List<String> roles = user.getAuthorities().stream()
+                    .map(authority -> authority.getAuthority())
                     .collect(Collectors.toList());
 
-            return ResponseEntity.ok(
-                    new JwtResponse(jwt, refreshToken, userDetails.getUsername(), roles,
-                            userInfo.getUserId()));
-        } catch (BadCredentialsException e) {
-            // Handle authentication failure
+            // Retrieve user information for the response
+            Optional<UserDetailsConf> userDetailsOpt = userDetailsConfigRepository.findByUsername(username);
+            if (userDetailsOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("User details could not be fetched");
+            }
+
+            UserDetailsConf userDetails = userDetailsOpt.get();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("jwtToken", jwt);
+            response.put("userId", userDetails.getUserId() );
+
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException ex) {
+            // Handle invalid credentials
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-        } catch (Exception e) {
-            // Handle any other exceptions that may occur
+        } catch (Exception ex) {
+            // Handle general exceptions
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
         }
     }
+
 }

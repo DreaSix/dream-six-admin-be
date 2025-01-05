@@ -73,7 +73,7 @@ public class PlayerDetailsController {
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(200)
                 .responseTime(LocalDateTime.now())
-                .data("create Players for team successfully!")
+                .data(playerDetailsResponseList)
                 .build();
 
         return ResponseEntity.ok(apiResponse);
